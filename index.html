@@ -1,0 +1,144 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Parking System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Preload GSAP to ensure it's available before the rest of the page loads -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" as="script">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-parking"></i>
+                <h1>Smart Parking</h1>
+            </div>
+        </header>
+
+        <div class="dashboard">
+            <div class="parking-overview">
+                <div class="stat-card">
+                    <i class="fas fa-car-side"></i>
+                    <div class="stat-info">
+                        <h3>Total Parked</h3>
+                        <p id="total-parked">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-layer-group"></i>
+                    <div class="stat-info">
+                        <h3>Stack Spots</h3>
+                        <p><span id="stack-occupied">0</span>/<span id="stack-total">10</span></p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-stream"></i>
+                    <div class="stat-info">
+                        <h3>Queue Spots</h3>
+                        <p><span id="queue-occupied">0</span>/<span id="queue-total">10</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="parking-simulator">
+                <div class="car-creator">
+                    <h2>Add New Vehicle</h2>
+                    <div class="car-form">
+                        <div class="car-preview" id="car-preview">
+                            <i class="fas fa-car"></i>
+                            <span id="preview-id">CAR-123</span>
+                        </div>
+                        <div class="car-inputs">
+                            <div class="input-group">
+                                <label for="car-id-input">Vehicle ID</label>
+                                <input type="text" id="car-id-input" placeholder="Enter ID" value="CAR-123">
+                            </div>
+                            <div class="input-group">
+                                <label>Vehicle Color</label>
+                                <div class="color-options">
+                                    <div class="color-option" data-color="#3498db" style="background-color: #3498db;"></div>
+                                    <div class="color-option" data-color="#e74c3c" style="background-color: #e74c3c;"></div>
+                                    <div class="color-option" data-color="#2ecc71" style="background-color: #2ecc71;"></div>
+                                    <div class="color-option" data-color="#f39c12" style="background-color: #f39c12;"></div>
+                                    <div class="color-option" data-color="#9b59b6" style="background-color: #9b59b6;"></div>
+                                </div>
+                            </div>
+                            <div class="drag-instructions">
+                                <i class="fas fa-hand-point-up"></i>
+                                <p>Drag vehicle to a parking spot</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="parking-areas">
+                    <div class="parking-section stack-section">
+                        <div class="section-header">
+                            <h2><i class="fas fa-layer-group"></i> Stack Parking (LIFO)</h2>
+                            <button class="remove-btn" id="remove-stack-btn">
+                                <i class="fas fa-sign-out-alt"></i> Remove Last
+                            </button>
+                        </div>
+                        <div class="parking-visualization">
+                            <div id="stack-spots" class="spots"></div>
+                        </div>
+                    </div>
+
+                    <div class="parking-section queue-section">
+                        <div class="section-header">
+                            <h2><i class="fas fa-stream"></i> Queue Parking (FIFO)</h2>
+                            <button class="remove-btn" id="remove-queue-btn">
+                                <i class="fas fa-sign-out-alt"></i> Remove First
+                            </button>
+                        </div>
+                        <div class="parking-visualization">
+                            <div id="queue-spots" class="spots"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="message-container">
+            <div id="message-area" class="hidden"></div>
+        </div>
+    </div>
+
+    <!-- Primary GSAP script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <!-- Fallback for GSAP in case CDN fails -->
+    <script>
+        if (typeof gsap === 'undefined') {
+            console.warn('GSAP failed to load from CDN. Using fallback animations.');
+            // Create a simplified GSAP fallback
+            window.gsap = {
+                from: function(selector, props) {
+                    console.log('GSAP fallback: from animation');
+                    return { kill: function() {} };
+                },
+                to: function(element, props) {
+                    console.log('GSAP fallback: to animation');
+                    if (props.onComplete) setTimeout(props.onComplete, props.duration * 1000 || 300);
+                    return { kill: function() {} };
+                },
+                fromTo: function(element, from, to) {
+                    console.log('GSAP fallback: fromTo animation');
+                    if (to.onComplete) setTimeout(to.onComplete, to.duration * 1000 || 300);
+                    return { kill: function() {} };
+                }
+            };
+        }
+    </script>
+    
+    <!-- Main application script -->
+    <script src="script.js"></script>
+</body>
+</html>
